@@ -1,6 +1,7 @@
 package Routing;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -32,6 +33,27 @@ public class SatNav {
 		}
 		return finalTuples;
 
+	}
+	public Tuple findSpecificRoute(String query) {
+		List<Node> finalRoute = new LinkedList<Node>();
+		String[] routeJunctions = query.split("-");
+		int totalDistance = 0;
+		for(int i = 0, j = 1; i< routeJunctions.length && j < routeJunctions.length ; i++, j++) {
+			StringBuilder queryBuilder = new StringBuilder();
+			queryBuilder.append(routeJunctions[i]);
+			queryBuilder.append(routeJunctions[j]);
+			List<Tuple> routes = findRoute(queryBuilder.toString());
+			for(int k = 0; k < routes.size(); k++) {
+				Tuple route = routes.get(k);
+				if (route.getVisitedRoutes().size() == 1) {
+					finalRoute.addAll(route.getVisitedRoutes());
+					totalDistance += route.getCurrentTotal();
+					break;
+				}
+			}
+		}
+		Tuple tuple = new Tuple(' ', totalDistance, finalRoute);
+		return tuple;
 	}
 	
 	public Tuple shortestRoute(List<Tuple> finalTuples) {
@@ -71,6 +93,8 @@ public class SatNav {
 		}
 		return sourceSet;
 	}
+
+
 
 
 

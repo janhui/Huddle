@@ -9,11 +9,15 @@ import java.util.Set;
 import Util.Tuple;
 
 public class Main {
+	
 
 	public static void main(String[] args) {
+		//graph is a set of nodes
 		Set<Node> graph = new HashSet<Node>();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
+		
+		// make a satnav
 		SatNav satnav = new SatNav();
 		System.out.println("Add graph");
 		String graphString = new String();
@@ -21,8 +25,10 @@ public class Main {
 			graphString = reader.readLine();
 		} catch (IOException e) {
 		}
+		// split the query string into nodes
 		String[] nodeString = graphString.split(", ");
 		System.out.println();
+		// add the nodes to graph 
 		for (int i = 0; i < nodeString.length; i++) {
 			String node = nodeString[i];
 			assert (node.length() == 3) : "There is some error in the way the graph was "
@@ -31,15 +37,20 @@ public class Main {
 			graph.add(new Node(node));
 
 		}
+		//add graph to SatNav
 		satnav.addGraph(graph);
+		
+//		Main while loop
 		while (graph != null) {
 			System.out.println("Options :");
 			System.out.println("-SR     : Shortest Route");
 			System.out.println("-R      : Route");
 			System.out.println("-D      : Shortest Distance");
-			System.out.println("-SJ     : Specific Number of Junction");
-			System.out.println("-SRD    : Shorted Route and Distance");
+			System.out.println("-SJM    : Maximum Number of Junction");
+			System.out.println("-SJE    : Maximum Number of Junction");
+			System.out.println("-SRD    : Shortest Route and Distance");
 			System.out.println("-ND     : Number of Routes");
+			//get the option
 			String option = null;
 			while (option == null) {
 				try {
@@ -48,6 +59,7 @@ public class Main {
 				}
 
 			}
+			// query the user wants to check
 			System.out.println("Query");
 			String query = null;
 			while (query == null) {
@@ -65,36 +77,32 @@ public class Main {
 				System.out.println("No Such Route");
 				
 			} else if (option.equals("SR")) {
-				int min_dist = Integer.MAX_VALUE;
-				Tuple tuple = null;
-				for(int i = 0; i < finalTuples.size(); i++) {
-					int temp = finalTuples.get(i).getCurrentTotal();
-					if(temp < min_dist) {
-						min_dist = temp;
-						tuple = finalTuples.get(i);
-					}
-				}
-				System.out.println(tuple.toString());
+				Tuple shourtestRoute = satnav.shortestRoute(finalTuples);
+				System.out.println(shourtestRoute.toString());
 				
 			} else if (option.equals("R")) {
-				System.out.println(finalTuples.toString());
-				
+				Tuple specificRoute = satnav.findSpecificRoute(query);
+				System.out.println("Route    : "+specificRoute.toString());
+				System.out.println("Distance : "+specificRoute.getCurrentTotal());
 			} else if (option.equals("D")) {
-				int min_dist = Integer.MAX_VALUE;
-				for(int i = 0; i < finalTuples.size(); i++) {
-					int temp = finalTuples.get(i).getCurrentTotal();
-					if(temp < min_dist) {
-						min_dist = temp;
-					}
-				}
-				System.out.println(min_dist);
-			} else if (option.equals("SJ")) {
+				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
+				System.out.println(shortestRoute.getCurrentTotal());
+//				TODO:
+			} else if (option.equals("SJM")) {
 				System.out.println(finalTuples.toString());
-			} else if (option.equals("SRD")) {
-				System.out.println(finalTuples.toString());
-//				todo:
-			} else if (option.equals("ND")) {
 				
+				//TODO:
+			} else if (option.equals("SJE")) {
+				System.out.println(finalTuples.toString());
+				
+				
+			} else if (option.equals("SRD")) {
+				Tuple shourtestRoute = satnav.shortestRoute(finalTuples);
+				System.out.println(shourtestRoute.toString());
+				System.out.println(shourtestRoute.getCurrentTotal());
+//TODO:
+			} else if (option.equals("ND")) {
+				System.out.println(finalTuples.size());
 			} else {
 //				System.out.println(finalTuple.toString());
 //				System.out.println(finalTuple.getCurrentTotal());
