@@ -33,6 +33,19 @@ public class SatNav {
 		return finalTuples;
 
 	}
+	
+	public Tuple shortestRoute(List<Tuple> finalTuples) {
+		int min_dist = Integer.MAX_VALUE;
+		Tuple tuple = null;
+		for(int i = 0; i < finalTuples.size(); i++) {
+			int temp = finalTuples.get(i).getCurrentTotal();
+			if(temp < min_dist) {
+				min_dist = temp;
+				tuple = finalTuples.get(i);
+			}
+		}
+		return tuple;
+	}
 
 	private Deque<Tuple> getSourceSet(char x, Tuple tuple) {
 		Deque<Tuple> sourceSet = new ConcurrentLinkedDeque<Tuple>();
@@ -58,5 +71,7 @@ public class SatNav {
 		}
 		return sourceSet;
 	}
+
+
 
 }
