@@ -1,4 +1,5 @@
 package Routing;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -48,7 +49,6 @@ public class SatNav {
 	}
 	
 	// find the distance if a the query route exist
-	// TODO: null;
 	public Tuple findSpecificRoute(String query) {
 		List<Node> finalRoute = new LinkedList<Node>();
 		String[] routeJunctions = query.split("-");
@@ -96,20 +96,22 @@ public class SatNav {
 			if (node.getSource() == source) {
 				List<Node> route = new ArrayList<Node>();
 				route.add(node);
-				sourceSet.add(new Tuple(node.getDestination(), node
-						.getDistance(), route));
+				Tuple tuple = new Tuple(node.getDestination(), node
+						.getDistance(), route);
+				sourceSet.add(tuple);
 			}
 		}
 		return sourceSet;
 	}
 	
 	private Deque<Tuple> getSourceSet(char x, Tuple tuple) {
-		Deque<Tuple> sourceSet = new ConcurrentLinkedDeque<Tuple>();
+		Deque<Tuple> sourceSet = new ArrayDeque<Tuple>();
 		for (Node node : graph) {
 			if (node.getSource() == x && !tuple.getVisitedRoutes().contains(node)) {
-				tuple.addVisitedRoutes(node);
-				sourceSet.add(new Tuple(node.getDestination(), 
-							  tuple.getCurrentTotal() + node.getDistance(), tuple.getVisitedRoutes()));
+				int totalDistance = tuple.getCurrentTotal() + node.getDistance();
+				Tuple newTuple = new Tuple(node.getDestination(), totalDistance, tuple.getVisitedRoutes());
+				newTuple.addVisitedRoutes(node);
+				sourceSet.add(newTuple);
 			}
 		}
 		return sourceSet;

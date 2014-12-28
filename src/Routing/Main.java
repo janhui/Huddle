@@ -47,7 +47,7 @@ public class Main {
 			System.out.println("-R      : Route");
 			System.out.println("-D      : Shortest Distance");
 			System.out.println("-SJM    : Maximum Number of Junction");
-			System.out.println("-SJE    : Maximum Number of Junction");
+			System.out.println("-SJE    : Exact Number of Junction");
 			System.out.println("-SRD    : Shortest Route and Distance");
 			System.out.println("-NR     : Number of Routes");
 			//get the option
@@ -73,12 +73,9 @@ public class Main {
 //			for(int i = 0; i< finalTuples.size(); i++) {
 //				System.out.println(finalTuples.get(i).toString());
 //			}
-			if(finalTuples.isEmpty() && !option.equals("R")) {
-				System.out.println("No Such Route");
-				
-			} else if (option.equals("SR")) {
-				Tuple shourtestRoute = satnav.shortestRoute(finalTuples);
-				System.out.println(shourtestRoute.toString());
+			if (option.equals("SR")) {
+				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
+				System.out.println(shortestRoute.toString());
 				
 			} else if (option.equals("R")) {
 				Tuple specificRoute = satnav.findSpecificRoute(query);
@@ -93,8 +90,20 @@ public class Main {
 				System.out.println(shortestRoute.getCurrentTotal());
 //				TODO:
 			} else if (option.equals("SJM")) {
-				System.out.println(finalTuples.toString());
-				
+				String[] sjmQueries = query.split(" ");
+				query = sjmQueries[0];
+				int count = 0;
+				int maxJunc = Integer.parseInt(sjmQueries[1]);
+				List<Tuple> finalSJMTuples = satnav.findRoute(query);
+				for (int i = 0; i < finalSJMTuples.size(); i++ ) {
+					Tuple tuple = finalSJMTuples.get(i);
+					// gets the visited nodes of the route and -1 (for the first node)
+					System.out.println(tuple.toString());
+					if(tuple.getVisitedRoutes().size() - 1 <= maxJunc ) {
+						count++;
+					}
+				}
+				System.out.println(count);
 //				TODO:
 			} else if (option.equals("SJE")) {
 				System.out.println(finalTuples.toString());

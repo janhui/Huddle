@@ -33,13 +33,14 @@ public class Tuple implements Comparable<Tuple>{
 	}
 
 	public void setVisitedRoutes(List<Node> visitedRoutes) {
-		this.visitedRoutes = visitedRoutes;
+		visitedRoutes = visitedRoutes;
 	}
 	public void addVisitedRoutes(Node route) {
-		this.visitedRoutes.add(route);
+		x = route.getDestination();
+		visitedRoutes.add(route);
 	}	
 	public void addVisitedRoutes(List<Node> routes) {
-		this.visitedRoutes.addAll(routes);
+		visitedRoutes.addAll(routes);
 	}
 
 	@Override
