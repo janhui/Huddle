@@ -14,7 +14,7 @@ public class SatNav {
 	public void addGraph(Set<Node> graph) {
 		this.graph = graph;
 	}
-
+// find route for a query
 	public List<Tuple> findRoute(String query) {
 		char source = query.charAt(0);
 		char destination = query.charAt(1);
@@ -34,10 +34,26 @@ public class SatNav {
 		return finalTuples;
 
 	}
+	
+//	find route within specific distance
+	public List<Tuple> findRoute(String query, int maxDistance) {
+		List<Tuple> routes = findRoute(query);
+		List<Tuple> filteredRoutes = new ArrayList<Tuple>();
+		for (int i = 0; i < routes.size() ; i++) {
+			if(routes.get(i).getCurrentTotal() <= maxDistance) {
+				filteredRoutes.add(routes.get(i));
+			}
+		}
+		return filteredRoutes;
+	}
+	
+	// find the distance if a the query route exist
+	// TODO: null;
 	public Tuple findSpecificRoute(String query) {
 		List<Node> finalRoute = new LinkedList<Node>();
 		String[] routeJunctions = query.split("-");
 		int totalDistance = 0;
+		char x = ' ';
 		for(int i = 0, j = 1; i< routeJunctions.length && j < routeJunctions.length ; i++, j++) {
 			StringBuilder queryBuilder = new StringBuilder();
 			queryBuilder.append(routeJunctions[i]);
@@ -48,12 +64,17 @@ public class SatNav {
 				if (route.getVisitedRoutes().size() == 1) {
 					finalRoute.addAll(route.getVisitedRoutes());
 					totalDistance += route.getCurrentTotal();
+					x = route.getX();
 					break;
 				}
 			}
 		}
-		Tuple tuple = new Tuple(' ', totalDistance, finalRoute);
-		return tuple;
+		if (x != routeJunctions[routeJunctions.length-1].charAt(0)) {
+			return null;
+		} else {
+			Tuple tuple = new Tuple(x, totalDistance, finalRoute);
+			return tuple;
+		}
 	}
 	
 	public Tuple shortestRoute(List<Tuple> finalTuples) {
@@ -69,18 +90,6 @@ public class SatNav {
 		return tuple;
 	}
 
-	private Deque<Tuple> getSourceSet(char x, Tuple tuple) {
-		Deque<Tuple> sourceSet = new ConcurrentLinkedDeque<Tuple>();
-		for (Node node : graph) {
-			if (node.getSource() == x && !tuple.getVisitedRoutes().contains(node)) {
-				tuple.addVisitedRoutes(node);
-				sourceSet.add(new Tuple(node.getDestination(), 
-							  tuple.getCurrentTotal() + node.getDistance(), tuple.getVisitedRoutes()));
-			}
-		}
-		return sourceSet;
-	}
-
 	private Deque<Tuple> getSourceSet(char source) {
 		Deque<Tuple> sourceSet = new ConcurrentLinkedDeque<Tuple>();
 		for (Node node : graph) {
@@ -93,9 +102,17 @@ public class SatNav {
 		}
 		return sourceSet;
 	}
-
-
-
-
+	
+	private Deque<Tuple> getSourceSet(char x, Tuple tuple) {
+		Deque<Tuple> sourceSet = new ConcurrentLinkedDeque<Tuple>();
+		for (Node node : graph) {
+			if (node.getSource() == x && !tuple.getVisitedRoutes().contains(node)) {
+				tuple.addVisitedRoutes(node);
+				sourceSet.add(new Tuple(node.getDestination(), 
+							  tuple.getCurrentTotal() + node.getDistance(), tuple.getVisitedRoutes()));
+			}
+		}
+		return sourceSet;
+	}
 
 }

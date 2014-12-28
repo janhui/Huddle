@@ -49,7 +49,7 @@ public class Main {
 			System.out.println("-SJM    : Maximum Number of Junction");
 			System.out.println("-SJE    : Maximum Number of Junction");
 			System.out.println("-SRD    : Shortest Route and Distance");
-			System.out.println("-ND     : Number of Routes");
+			System.out.println("-NR     : Number of Routes");
 			//get the option
 			String option = null;
 			while (option == null) {
@@ -69,11 +69,11 @@ public class Main {
 				}
 			}
 			List<Tuple> finalTuples = satnav.findRoute(query);
-			System.out.println(finalTuples.size());
-			for(int i = 0; i< finalTuples.size(); i++) {
-				System.out.println(finalTuples.get(i).toString());
-			}
-			if(finalTuples.isEmpty()) {
+//			System.out.println(finalTuples.size());
+//			for(int i = 0; i< finalTuples.size(); i++) {
+//				System.out.println(finalTuples.get(i).toString());
+//			}
+			if(finalTuples.isEmpty() && !option.equals("R")) {
 				System.out.println("No Such Route");
 				
 			} else if (option.equals("SR")) {
@@ -82,8 +82,12 @@ public class Main {
 				
 			} else if (option.equals("R")) {
 				Tuple specificRoute = satnav.findSpecificRoute(query);
-				System.out.println("Route    : "+specificRoute.toString());
-				System.out.println("Distance : "+specificRoute.getCurrentTotal());
+				if (specificRoute == null) {
+					System.out.println("No Such Route");
+				} else {
+					System.out.println("Route    : "+specificRoute.toString());
+					System.out.println("Distance : "+specificRoute.getCurrentTotal());
+				}
 			} else if (option.equals("D")) {
 				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
 				System.out.println(shortestRoute.getCurrentTotal());
@@ -91,17 +95,19 @@ public class Main {
 			} else if (option.equals("SJM")) {
 				System.out.println(finalTuples.toString());
 				
-				//TODO:
+//				TODO:
 			} else if (option.equals("SJE")) {
 				System.out.println(finalTuples.toString());
 				
 				
 			} else if (option.equals("SRD")) {
-				Tuple shourtestRoute = satnav.shortestRoute(finalTuples);
-				System.out.println(shourtestRoute.toString());
-				System.out.println(shourtestRoute.getCurrentTotal());
+				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
+				System.out.println(shortestRoute.toString());
+				System.out.println(shortestRoute.getCurrentTotal());
 //TODO:
-			} else if (option.equals("ND")) {
+			} else if (option.equals("NR")) {
+				String[] queryStrings = query.split(" ");
+				List<Tuple> routes = satnav.findRoute(queryStrings[0], Integer.parseInt(queryStrings[1]));
 				System.out.println(finalTuples.size());
 			} else {
 //				System.out.println(finalTuple.toString());
