@@ -68,11 +68,7 @@ public class Main {
 				} catch (Exception e) {
 				}
 			}
-			List<Tuple> finalTuples = satnav.findRoute(query);
-//			System.out.println(finalTuples.size());
-//			for(int i = 0; i< finalTuples.size(); i++) {
-//				System.out.println(finalTuples.get(i).toString());
-//			}
+			List<Tuple> finalTuples = satnav.findRoutes(query);
 			if (option.equals("SR")) {
 				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
 				System.out.println(shortestRoute.toString());
@@ -91,34 +87,15 @@ public class Main {
 			} else if (option.equals("SJM")) {
 				String[] sjmQueries = query.split(" ");
 				query = sjmQueries[0];
-				int count = 0;
 				int maxJunc = Integer.parseInt(sjmQueries[1]);
-				List<Tuple> finalSJMTuples = satnav.findRoute(query);
-				for (int i = 0; i < finalSJMTuples.size(); i++ ) {
-					Tuple tuple = finalSJMTuples.get(i);
-					// gets the visited nodes of the route
-					System.out.println(tuple.toString());
-					if(tuple.getVisitedRoutes().size() <= maxJunc ) {
-						count++;
-					}
-				}
+				int count = satnav.findRouteSpecificDistance(query, maxJunc, false);
 				System.out.println(count);
 			} else if (option.equals("SJE")) {
 				String[] sjmQueries = query.split(" ");
 				query = sjmQueries[0];
-				int count = 0;
 				int maxJunc = Integer.parseInt(sjmQueries[1]);
-				List<Tuple> finalSJMTuples = satnav.findRoute(query);
-				for (int i = 0; i < finalSJMTuples.size(); i++ ) {
-					Tuple tuple = finalSJMTuples.get(i);
-					// gets the visited nodes of the route and -1 (for the first node)
-					System.out.println(tuple.toString());
-					if(tuple.getVisitedRoutes().size() == maxJunc ) {
-						count++;
-					}
-				}
+				int count = satnav.findRouteSpecificDistance(query, maxJunc, true);
 				System.out.println(count);
-				
 			} else if (option.equals("SRD")) {
 				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
 				System.out.println(shortestRoute.toString());
@@ -126,7 +103,7 @@ public class Main {
 //TODO:
 			} else if (option.equals("NR")) {
 				String[] queryStrings = query.split(" ");
-				List<Tuple> routes = satnav.findRoute(queryStrings[0], Integer.parseInt(queryStrings[1]));
+				List<Tuple> routes = satnav.findRouteMaxDistance(queryStrings[0], Integer.parseInt(queryStrings[1]));
 				for (Tuple t : routes) {
 					System.out.println(t.toString());
 				}

@@ -11,34 +11,53 @@ import Util.Tuple;
 
 public class SatNav {
 	private Set<Node> graph;
-
+	
+	
 	public void addGraph(Set<Node> graph) {
 		this.graph = graph;
 	}
-// find route for a query
-	public List<Tuple> findRoute(String query) {
-		char source = query.charAt(0);
-		char destination = query.charAt(1);
-		Deque<Tuple> intermediates = getSourceSet(source);
-		List<Tuple> finalTuples = new ArrayList<Tuple>();
-		while (!intermediates.isEmpty()) {
-			Tuple tuple = intermediates.pop();
-			if (tuple.getDestination() == destination) {
-				 finalTuples.add(tuple);
-			} else {
-				Deque<Tuple> temp = getSourceSet(tuple.getDestination(), tuple);
-				for (Tuple tempTuple : temp) {
-					intermediates.addLast(tempTuple);
-				}
-			}
-		}
-		return finalTuples;
-
+	
+	public List<Tuple> findRoutes(String query) {
+		return findRoute(query);
 	}
 	
-//	find route within specific distance
-	public List<Tuple> findRoute(String query, int maxDistance) {
-		List<Tuple> routes = findRoute(query);
+	/*find route for a query
+	 * params:
+	 * query = StartDestination
+	 * maxJunc = the maximum number of junctions constraint
+	 * equal = to see if the query is equal the number of junction or upto the maxjunc
+	 * 
+	 * returns the list of tuples where tuples are individual routes
+	*/
+	public int findRouteSpecificDistance(String query, int maxJunc, boolean equal) {
+		int count = 0;
+		List<Tuple> routes = findRoute(query,50);
+		for (int i = 0; i < routes.size(); i++ ) {
+		Tuple tuple = routes.get(i);
+		// gets the visited nodes of the route 
+		if(equal) {
+			if(tuple.getVisitedRoutes().size() == maxJunc ) {
+				count++;
+			}
+		} else {
+			if(tuple.getVisitedRoutes().size() <= maxJunc ) {
+				count++;
+			}
+		}
+	}
+		return count;
+	}
+	
+	
+	
+	/*find route for a query
+	 * params:
+	 * query = StartDestination
+	 * MaxDistace  = the maximum distance the route can have
+	 * returns the list of tuples where tuples are individual routes
+	*/
+	public List<Tuple> findRouteMaxDistance(String query, int maxDistance) {
+		List<Tuple> routes = findRoute(query, maxDistance);
 		List<Tuple> filteredRoutes = new ArrayList<Tuple>();
 		for (int i = 0; i < routes.size() ; i++) {
 			if(routes.get(i).getCurrentTotal() <= maxDistance) {
@@ -48,7 +67,13 @@ public class SatNav {
 		return filteredRoutes;
 	}
 	
-	// find the distance if a the query route exist
+
+	/*find route for a query
+	 * params:
+	 * query = Start-Junction-Junction-...-Destination
+	 * 
+	 * returns the tuples where tuple is the specific route if it exist else null 
+	*/
 	public Tuple findSpecificRoute(String query) {
 		List<Node> finalRoute = new LinkedList<Node>();
 		String[] routeJunctions = query.split("-");
@@ -77,6 +102,12 @@ public class SatNav {
 		}
 	}
 	
+	/*find shortes route for a query
+	 * params:
+	 * finalTuples = list of all the routes
+	 * 
+	 * returns the shortest route tuple
+	*/
 	public Tuple shortestRoute(List<Tuple> finalTuples) {
 		int min_dist = Integer.MAX_VALUE;
 		Tuple tuple = null;
@@ -89,9 +120,69 @@ public class SatNav {
 		}
 		return tuple;
 	}
+	
+	
+	/*find route for a query
+	 * params:
+	 * query = StartDestination
+	 * 
+	 * returns the list of tuples where tuples are individual routes
+	*/
+	private List<Tuple> findRoute(String query) {
+		char source = query.charAt(0);
+		char destination = query.charAt(1);
+		//queue of the breadth first search down the graph
+		Deque<Tuple> intermediates = getSourceSet(source);
+		List<Tuple> finalTuples = new ArrayList<Tuple>();
+		// pops the front of the queue
+		while (!intermediates.isEmpty()) {
+			Tuple tuple = intermediates.pop();
+			if (tuple.getDestination() == destination) {
+				//add to the list of tuples to return
+				 finalTuples.add(tuple);
+			} else {
+				Deque<Tuple> temp = getSourceSet(tuple.getDestination(), tuple);
+				for (Tuple tempTuple : temp) {
+					//add to the end of the queue
+					intermediates.addLast(tempTuple);
+				}
+			}
+		}
+		return finalTuples;
+	
+	}
 
+	private List<Tuple> findRoute(String query, int maxDistance) {
+		char source = query.charAt(0);
+		char destination = query.charAt(1);
+		Deque<Tuple> intermediates = getSourceSet(source);
+		List<Tuple> finalTuples = new ArrayList<Tuple>();
+		while (!intermediates.isEmpty()) {
+			Tuple tuple = intermediates.pop();
+			if (tuple.getDestination() == destination) {
+				finalTuples.add(tuple);
+
+			}
+			Deque<Tuple> temp = getSourceSet(tuple.getDestination(), tuple,
+					maxDistance);
+			for (Tuple tempTuple : temp) {
+				intermediates.addLast(tempTuple);
+
+			}
+		}
+		return finalTuples;
+	
+	}
+	
+	
+	/*getSourceSet: finds all the route where the junction is the start point
+	 * params:
+	 * source = junction
+	 * 
+	 * returns the list of tuples
+	*/
 	private Deque<Tuple> getSourceSet(char source) {
-		Deque<Tuple> sourceSet = new ConcurrentLinkedDeque<Tuple>();
+		Deque<Tuple> sourceSet = new ArrayDeque<Tuple>();
 		for (Node node : graph) {
 			if (node.getSource() == source) {
 				List<Node> route = new ArrayList<Node>();
@@ -103,11 +194,19 @@ public class SatNav {
 		}
 		return sourceSet;
 	}
-	
-	private Deque<Tuple> getSourceSet(char x, Tuple tuple)  {
+	/*getSourceSet: finds all the route where the junction is the start point and
+	 *  add a new junction in if it hasnt been added in alread
+	 *  
+	 * params:
+	 * source = junction
+	 * tuple = the current route
+	 * 
+	 * returns the new list of tuples 
+	*/
+	private Deque<Tuple> getSourceSet(char destination, Tuple tuple)  {
 		Deque<Tuple> sourceSet = new ArrayDeque<Tuple>();
 		for (Node node : graph) {
-			if (node.getSource() == x ) {
+			if (node.getSource() == destination && !tuple.getVisitedRoutes().contains(node)) {
 				int totalDistance = tuple.getCurrentTotal() + node.getDistance();
 				List<Node> tempList = new ArrayList<Node>();
 				tempList.addAll(tuple.getVisitedRoutes());
@@ -118,5 +217,26 @@ public class SatNav {
 		}
 		return sourceSet;
 	}
+	
+	
+	private Deque<Tuple> getSourceSet(char destination, Tuple tuple, int maxDistance) {
+		Deque<Tuple> sourceSet = new ArrayDeque<Tuple>();
+		for (Node node : graph) {
+			if (node.getSource() == destination ) {
+				int totalDistance = tuple.getCurrentTotal() + node.getDistance();
+				List<Node> tempList = new ArrayList<Node>();
+				tempList.addAll(tuple.getVisitedRoutes());
+				Tuple newTuple = new Tuple(node.getDestination(), totalDistance, tempList);
+				newTuple.addVisitedRoutes(node);
+				if(totalDistance < maxDistance) {
+					sourceSet.add(newTuple);
+				}
+			}
+		}
+		return sourceSet;
+	}
+	
+
+
 
 }
