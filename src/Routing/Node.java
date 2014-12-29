@@ -4,6 +4,8 @@ public class Node {
 
 	/*
 	 * Assumption: Input is of size three in the format CharCharInt
+	 * 
+	 * Nodes of the graph contains source , destination and distance
 	 */
 	private char source;
 	private char destination;

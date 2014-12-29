@@ -3,7 +3,12 @@ package Util;
 import java.util.List;
 
 import Routing.Node;
-
+/*
+ * Tuple keeps track of the route ...
+ * the nodes this route has visited
+ * the destination 
+ * the distance this route has covered.
+ */
 public class Tuple implements Comparable<Tuple>{
 	private char destination;
 	private int currentTotal;
