@@ -5,7 +5,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 import Util.Tuple;
 
@@ -17,9 +16,6 @@ public class SatNav {
 		this.graph = graph;
 	}
 	
-	public List<Tuple> findRoutes(String query) {
-		return findRoute(query);
-	}
 	
 	/*find route for a query
 	 * params:
@@ -108,7 +104,8 @@ public class SatNav {
 	 * 
 	 * returns the shortest route tuple
 	*/
-	public Tuple shortestRoute(List<Tuple> finalTuples) {
+	public Tuple shortestRoute(String query) {
+		List<Tuple> finalTuples = findRoute(query);
 		int min_dist = Integer.MAX_VALUE;
 		Tuple tuple = null;
 		for(int i = 0; i < finalTuples.size(); i++) {
@@ -151,7 +148,8 @@ public class SatNav {
 		return finalTuples;
 	
 	}
-
+	
+//	find all the route upto a maximum distance and return the list
 	private List<Tuple> findRoute(String query, int maxDistance) {
 		char source = query.charAt(0);
 		char destination = query.charAt(1);
@@ -161,7 +159,6 @@ public class SatNav {
 			Tuple tuple = intermediates.pop();
 			if (tuple.getDestination() == destination) {
 				finalTuples.add(tuple);
-
 			}
 			Deque<Tuple> temp = getSourceSet(tuple.getDestination(), tuple,
 					maxDistance);
@@ -218,7 +215,7 @@ public class SatNav {
 		return sourceSet;
 	}
 	
-	
+//	add the next node on the route to the tuple if the total distance < max distance
 	private Deque<Tuple> getSourceSet(char destination, Tuple tuple, int maxDistance) {
 		Deque<Tuple> sourceSet = new ArrayDeque<Tuple>();
 		for (Node node : graph) {
