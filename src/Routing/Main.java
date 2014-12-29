@@ -76,6 +76,7 @@ public class Main {
 				} catch (Exception e) {
 				}
 			}
+			// result for specific route
 			if (option.equals("R")) {
 				Tuple specificRoute = satnav.findSpecificRoute(query);
 				if (specificRoute == null) {
@@ -84,7 +85,8 @@ public class Main {
 					System.out.println("Route    : "+specificRoute.toString());
 					System.out.println("Distance : "+specificRoute.getCurrentTotal());
 				}
-				
+
+				// result for shortest distance
 			} else if (option.equals("D")) {
 				Tuple shortestRoute = satnav.shortestRoute(query);
 				if(shortestRoute == null) {
@@ -92,7 +94,8 @@ public class Main {
 				} else {
 					System.out.println(shortestRoute.getCurrentTotal());
 				}
-				
+
+				// result for shortest route
 			} else if (option.equals("SR")) {
 				Tuple shortestRoute = satnav.shortestRoute(query);
 				if(shortestRoute == null) {
@@ -100,7 +103,8 @@ public class Main {
 				} else {
 					System.out.println(shortestRoute.toString());
 				}
-				
+
+				// result for shortes route and distance
 			} else if (option.equals("SRD")) {
 				Tuple shortestRoute = satnav.shortestRoute(query);
 				if(shortestRoute == null) {
@@ -109,7 +113,8 @@ public class Main {
 					System.out.println(shortestRoute.toString());
 					System.out.println(shortestRoute.getCurrentTotal());
 				}
-				
+
+				// result for upto Maximum junction
 			} else if (option.equals("SJM")) {
 				String[] sjmQueries = query.split(" ");
 				if(sjmQueries.length != 2) {
@@ -120,7 +125,8 @@ public class Main {
 					int count = satnav.findRouteSpecificDistance(query, maxJunc, false);
 					System.out.println(count);
 				}
-				
+
+				// result for equal maximum junction 
 			} else if (option.equals("SJE")) {
 				String[] sjeQueries = query.split(" ");
 				if(sjeQueries.length != 2) {
@@ -131,6 +137,8 @@ public class Main {
 					int count = satnav.findRouteSpecificDistance(query, maxJunc, true);
 					System.out.println(count);
 				}	
+
+				// result for number of route
 			} else if (option.equals("NR")) {
 				String[] queryStrings = query.split(" ");
 				if(queryStrings.length != 2) {
