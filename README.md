@@ -24,10 +24,12 @@ Options :
 -NR     : Number of Routes
 
 
-FOR OPTION SJM, SJE, NR
+                                FOR OPTION SJM, SJE, NR
 
-you have to input a number after the query
+You have to input a number after the query
 i.e CC 30,
-where the number is the number of junction for SJE and SJM
+
+Where the number is the number of junction for SJE and SJM
 or
-number is the maximum distance for NR
+
+Number is the maximum distance for NR
