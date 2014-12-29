@@ -1,12 +1,17 @@
 Huddle
 ======
-How to use it.. 
-clone the repo and run "java -jar GraphTest.jar"
-Then add the "graph" 
+How to use it..
+
+Clone the repo and
+Run "java -jar GraphTest.jar"
+
+Then add the "graph"
 e.g "AB5, BC4, CD7, DC8, DE6, AD5, CE2, EB3, AE7"
 
-Then input the option you want query i.e "R" for specific route, or 'NR' for number of routes
-Then add the query 
+Then input the option you want query
+i.e "R" for specific route, or 'NR' for number of routes
+
+Then add the query
 i.e AC, CC etc.
 
 Options :
@@ -21,8 +26,8 @@ Options :
 
 FOR OPTION SJM, SJE, NR
 
-you have to input a number after the query 
-i.e CC 30, 
-where the number is the number of junction for SJE and SJM 
-or 
+you have to input a number after the query
+i.e CC 30,
+where the number is the number of junction for SJE and SJM
+or
 number is the maximum distance for NR
