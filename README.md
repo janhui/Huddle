@@ -16,11 +16,17 @@ i.e AC, CC etc.
 
 Options :
 -R      : Route
+
 -D      : Shortest Distance
+
 -SR     : Shortest Route
+
 -SRD    : Shortest Route and Distance
+
 -SJM    : Maximum Number of Junction
+
 -SJE    : Exact Number of Junction
+
 -NR     : Number of Routes
 
 
