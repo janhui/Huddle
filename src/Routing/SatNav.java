@@ -23,10 +23,10 @@ public class SatNav {
 		List<Tuple> finalTuples = new ArrayList<Tuple>();
 		while (!intermediates.isEmpty()) {
 			Tuple tuple = intermediates.pop();
-			if (tuple.getX() == destination) {
+			if (tuple.getDestination() == destination) {
 				 finalTuples.add(tuple);
 			} else {
-				Deque<Tuple> temp = getSourceSet(tuple.getX(), tuple);
+				Deque<Tuple> temp = getSourceSet(tuple.getDestination(), tuple);
 				for (Tuple tempTuple : temp) {
 					intermediates.addLast(tempTuple);
 				}
@@ -64,7 +64,7 @@ public class SatNav {
 				if (route.getVisitedRoutes().size() == 1) {
 					finalRoute.addAll(route.getVisitedRoutes());
 					totalDistance += route.getCurrentTotal();
-					x = route.getX();
+					x = route.getDestination();
 					break;
 				}
 			}
@@ -104,12 +104,14 @@ public class SatNav {
 		return sourceSet;
 	}
 	
-	private Deque<Tuple> getSourceSet(char x, Tuple tuple) {
+	private Deque<Tuple> getSourceSet(char x, Tuple tuple)  {
 		Deque<Tuple> sourceSet = new ArrayDeque<Tuple>();
 		for (Node node : graph) {
-			if (node.getSource() == x && !tuple.getVisitedRoutes().contains(node)) {
+			if (node.getSource() == x ) {
 				int totalDistance = tuple.getCurrentTotal() + node.getDistance();
-				Tuple newTuple = new Tuple(node.getDestination(), totalDistance, tuple.getVisitedRoutes());
+				List<Node> tempList = new ArrayList<Node>();
+				tempList.addAll(tuple.getVisitedRoutes());
+				Tuple newTuple = new Tuple(node.getDestination(), totalDistance, tempList);
 				newTuple.addVisitedRoutes(node);
 				sourceSet.add(newTuple);
 			}

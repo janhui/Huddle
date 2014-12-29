@@ -88,8 +88,22 @@ public class Main {
 			} else if (option.equals("D")) {
 				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
 				System.out.println(shortestRoute.getCurrentTotal());
-//				TODO:
 			} else if (option.equals("SJM")) {
+				String[] sjmQueries = query.split(" ");
+				query = sjmQueries[0];
+				int count = 0;
+				int maxJunc = Integer.parseInt(sjmQueries[1]);
+				List<Tuple> finalSJMTuples = satnav.findRoute(query);
+				for (int i = 0; i < finalSJMTuples.size(); i++ ) {
+					Tuple tuple = finalSJMTuples.get(i);
+					// gets the visited nodes of the route
+					System.out.println(tuple.toString());
+					if(tuple.getVisitedRoutes().size() <= maxJunc ) {
+						count++;
+					}
+				}
+				System.out.println(count);
+			} else if (option.equals("SJE")) {
 				String[] sjmQueries = query.split(" ");
 				query = sjmQueries[0];
 				int count = 0;
@@ -99,15 +113,11 @@ public class Main {
 					Tuple tuple = finalSJMTuples.get(i);
 					// gets the visited nodes of the route and -1 (for the first node)
 					System.out.println(tuple.toString());
-					if(tuple.getVisitedRoutes().size() - 1 <= maxJunc ) {
+					if(tuple.getVisitedRoutes().size() == maxJunc ) {
 						count++;
 					}
 				}
 				System.out.println(count);
-//				TODO:
-			} else if (option.equals("SJE")) {
-				System.out.println(finalTuples.toString());
-				
 				
 			} else if (option.equals("SRD")) {
 				Tuple shortestRoute = satnav.shortestRoute(finalTuples);
@@ -117,6 +127,9 @@ public class Main {
 			} else if (option.equals("NR")) {
 				String[] queryStrings = query.split(" ");
 				List<Tuple> routes = satnav.findRoute(queryStrings[0], Integer.parseInt(queryStrings[1]));
+				for (Tuple t : routes) {
+					System.out.println(t.toString());
+				}
 				System.out.println(finalTuples.size());
 			} else {
 //				System.out.println(finalTuple.toString());

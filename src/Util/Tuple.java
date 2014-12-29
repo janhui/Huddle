@@ -5,43 +5,37 @@ import java.util.List;
 import Routing.Node;
 
 public class Tuple implements Comparable<Tuple>{
-	private char x;
+	private char destination;
 	private int currentTotal;
-	List<Node> visitedRoutes;
+	private List<Node> visitedRoutes;
 	
-	public Tuple(char x, int currentTotal, List<Node> visitedRoutes) {
-		this.x = x;
+	public Tuple(char desitnation, int currentTotal, List<Node> visitedRoutes) {
+		this.destination = desitnation;
 		this.currentTotal = currentTotal;
 		this.visitedRoutes = visitedRoutes;
 	}
-	
-	public char getX() {
-		return x;
+
+	public char getDestination() {
+		return destination;
 	}
 	public int getCurrentTotal() {
 		return currentTotal;
 	}
-	public void setX(char x) {
-		this.x =  x;
+	public void setDestination(char destination) {
+		this.destination =  destination;
 	}
-	public void setCurrentTotal(int y) {
-		this.currentTotal =  y;
+	public void setCurrentTotal(int total) {
+		this.currentTotal =  total;
 	}
 
 	public List<Node> getVisitedRoutes() {
 		return visitedRoutes;
 	}
 
-	public void setVisitedRoutes(List<Node> visitedRoutes) {
-		visitedRoutes = visitedRoutes;
-	}
 	public void addVisitedRoutes(Node route) {
-		x = route.getDestination();
+		destination = route.getDestination();
 		visitedRoutes.add(route);
 	}	
-	public void addVisitedRoutes(List<Node> routes) {
-		visitedRoutes.addAll(routes);
-	}
 
 	@Override
 	public int compareTo(Tuple o) {
@@ -65,6 +59,7 @@ public class Tuple implements Comparable<Tuple>{
 		}
 		return builder.toString();
 	}
+	
 	
 
 }
